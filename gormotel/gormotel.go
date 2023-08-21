@@ -11,7 +11,7 @@ import (
 	"gorm.io/gorm"
 )
 
-type GormPlugin struct {
+type TracePlugin struct {
 }
 
 const (
@@ -20,15 +20,15 @@ const (
 	callBackAfterName  = "trace:after"
 )
 
-var _ gorm.Plugin = GormPlugin{}
+var _ gorm.Plugin = TracePlugin{}
 
 var tracer = otel.Tracer(gormSpanKey)
 
-func (g GormPlugin) Name() string {
+func (g TracePlugin) Name() string {
 	return "TracePlugin"
 }
 
-func (g GormPlugin) Initialize(db *gorm.DB) error {
+func (g TracePlugin) Initialize(db *gorm.DB) error {
 	// 开始前
 	_ = db.Callback().Create().Before("gorm:before_create").Register(callBackBeforeName, before)
 	_ = db.Callback().Query().Before("gorm:query").Register(callBackBeforeName, before)

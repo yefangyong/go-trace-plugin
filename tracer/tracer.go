@@ -61,8 +61,8 @@ func (c *Conf) WithSampling(sampling float64) OptionFunc {
 	}
 }
 
-// TraceProvider create provider
-func (c *Conf) TraceProvider(options ...OptionFunc) *tracesdk.TracerProvider {
+// TracerProvider create provider
+func (c *Conf) TracerProvider(options ...OptionFunc) (*tracesdk.TracerProvider, error) {
 	option := &Option{
 		provider: ProviderJaeger,
 		sampling: 1,
@@ -74,7 +74,7 @@ func (c *Conf) TraceProvider(options ...OptionFunc) *tracesdk.TracerProvider {
 
 	exp, err := c.CreateTracerProvider(option.provider, c.Endpoint)
 	if err != nil {
-		panic(fmt.Sprintf("create tracer provider error：%s", err.Error()))
+		return nil, err
 	}
 
 	tp := tracesdk.NewTracerProvider(
@@ -88,7 +88,7 @@ func (c *Conf) TraceProvider(options ...OptionFunc) *tracesdk.TracerProvider {
 		)),
 	)
 
-	return tp
+	return tp, nil
 }
 
 // CreateTracerProvider create provider
